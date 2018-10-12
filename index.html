@@ -4,18 +4,24 @@
 <head>
   <meta charset="utf-8">
 
-  <title>The HTML5 Herald</title>
-  <meta name="description" content="The HTML5 Herald">
-  <meta name="author" content="SitePoint">
+  <title>Playground</title>
+  <meta name="description" content="Just for messing around">
+  <meta name="author" content="Pierre Joubert">
 
   <link rel="stylesheet" href="assets/css/styles.css?v=1.0">
-
 </head>
 
-<body>
+<body ng-app="playground">
     <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.6.9/angular.min.js"></script>
 
     <script>
+        angular.module("playground", [])
+
+        .controller("PlaygroundController", function($scope) {
+            var $ctrl = this;
+            $ctrl.foo = "Boom";
+        });
+
         function getChecklists() {
             var settings = {
                 "async": true,
@@ -35,5 +41,9 @@
             });
         }
     </script>
+
+    <div ng-controller="PlaygroundController">
+        <h1>{{$ctrl.foo}}</h1>
+    </div>
 </body>
 </html>

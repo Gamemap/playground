@@ -8,14 +8,32 @@
   <meta name="description" content="The HTML5 Herald">
   <meta name="author" content="SitePoint">
 
-  <link rel="stylesheet" href="css/styles.css?v=1.0">
+  <link rel="stylesheet" href="assets/css/styles.css?v=1.0">
 
 </head>
 
 <body>
-    <script
-      src="https://code.jquery.com/jquery-3.3.1.min.js"
-      integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8="
-      crossorigin="anonymous"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.6.9/angular.min.js"></script>
+
+    <script>
+        function getChecklists() {
+            var settings = {
+                "async": true,
+                "crossDomain": true,
+                "url": "https://api.digilex.co.za/checklists/",
+                "method": "GET",
+                "headers": {
+                    "Cache-Control": "no-cache",
+                    "Content-Type": "application/x-www-form-urlencoded",
+                    "cache-control": "no-cache",
+                    "Authorization": "bearer c5a2b1dc792d37740992c7b0965a48a41fc129f7940fe9d072b71add5fce901a"
+                }
+            }
+
+            $.ajax(settings).done(function (response) {
+                console.log(response);
+            });
+        }
+    </script>
 </body>
 </html>

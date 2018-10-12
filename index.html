@@ -9,41 +9,94 @@
   <meta name="author" content="Pierre Joubert">
 
   <link rel="stylesheet" href="assets/css/styles.css?v=1.0">
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
 </head>
 
 <body ng-app="playground">
+    <script
+        src="https://code.jquery.com/jquery-3.3.1.min.js"
+        integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8="
+        crossorigin="anonymous"></script>
+
+    <script
+        src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"
+        integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa"
+        crossorigin="anonymous"></script>
+
     <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.6.9/angular.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/angular-ui-bootstrap/2.5.0/ui-bootstrap-tpls.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/angular-ui-bootstrap/2.5.0/ui-bootstrap.js"></script>
+
 
     <script>
-        angular.module("playground", [])
+        var app = angular.module("playground", []);
 
-        .controller("PlaygroundController", function($scope) {
+        app.controller("PlaygroundController", function($http) {
             var $ctrl = this;
-            $ctrl.foo = "Boom";
-        });
 
-        function getChecklists() {
-            var settings = {
-                "async": true,
-                "crossDomain": true,
-                "url": "https://api.digilex.co.za/checklists/",
-                "method": "GET",
-                "headers": {
-                    "Cache-Control": "no-cache",
-                    "Content-Type": "application/x-www-form-urlencoded",
-                    "cache-control": "no-cache",
-                    "Authorization": "bearer c5a2b1dc792d37740992c7b0965a48a41fc129f7940fe9d072b71add5fce901a"
-                }
+            $ctrl.$onInit = function () {
+                $ctrl.showLoader = false;
+                
+
+                $ctrl.getAudits();
             }
 
-            $.ajax(settings).done(function (response) {
-                console.log(response);
-            });
-        }
+            $ctrl.getAudits = function() {
+                $ctrl.showLoader = true;
+
+                $http.get("https://api.digilex.co.za/audits/", {
+                    headers: {
+                        "Cache-Control": "no-cache",
+                        "Content-Type": "application/x-www-form-urlencoded",
+                        "Authorization": $ctrl.authToken
+                    }
+                }).then(function (response) {
+                    $ctrl.checklists = response.data;
+                }).catch(function () {
+                    console.log('sumting wong');
+                }).finally(function () {
+                    $ctrl.showLoader = false;
+                });
+            }
+
+            $ctrl.openItem = function(itemId) {
+
+            }
+        });
     </script>
 
-    <div ng-controller="PlaygroundController">
-        <h1>{{$ctrl.foo}}</h1>
+    <div ng-controller="PlaygroundController as $ctrl" class="container">
+        <div class="loading" ng-show="$ctrl.showLoader"></div>
+
+        <div class="row" ng-hide="$ctrl.showLoader" ng-cloak>
+            <table class="table table-striped">
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Name</th>
+                        <th></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr ng-repeat="checklist in $ctrl.checklists">
+                        <td>{{checklist.id}}</td>
+                        <td>{{checklist.title}}</td>
+                        <td>
+                            <button type="button"
+                                    class="btn btn-primary"
+                                    ng-click="$ctrl.openItem(checklist.id)">
+                                    View
+                            </button>
+                        </td>
+                    </tr>
+                    <tr ng-show="$ctrl.checklists.count <= 0">
+                        <td colspan="3">
+                            Nothing to show here
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
     </div>
 </body>
 </html>

@@ -1,3 +1,7 @@
+# Introduction
+
+This repo is for public collab on some of my work related projects
+
 # Setup
 
 1. Install composer
@@ -9,9 +13,10 @@
    * Append `--prefer-dist -vvv --profile` for verbosity
 
 <details>
-  <summary>GitHub Pages Welcome</summary>  
   
-  ## Welcome to GitHub Pages
+<summary>GitHub Pages Welcome</summary>  
+  
+## Welcome to GitHub Pages
 
 You can use the [editor on GitHub](https://github.com/pierrejoubert73/playground/edit/master/README.md) to maintain and preview the content for your website in Markdown files.
 

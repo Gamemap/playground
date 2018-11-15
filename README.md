@@ -2,16 +2,6 @@
 
 This repo is for public collab on some of my work related projects
 
-# Setup
-
-1. Install composer
-   * `Placeholder`
-2. Get fxp/composer-asset-plugin. This removes the need for NPM/Bower (I think)
-   * `composer require fxp/composer-asset-plugin`
-3. Install all composer/npm packages
-   * `composer install`
-   * Append `--prefer-dist -vvv --profile` for verbosity
-
 <details>
   
 <summary>GitHub Pages Welcome</summary>  

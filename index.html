@@ -2,7 +2,7 @@
 
 <div class="container">
   <h1>Log into Ariscu</h1>
-  <form id="myForm" method="POST">
+  <form id="myForm" action="https://www.digilex.co.za/auth/login" method="POST">
     <div class="form-group">
       <input type="hidden" name="signin" value="true" />
 
@@ -10,7 +10,6 @@
       <input type="email"
              class="form-control"
              id="email"
-             aria-describedby="emailHelp"
              placeholder="Enter email"
              name="email">
     </div>
@@ -22,54 +21,47 @@
              placeholder="Password"
              name="password">
     </div>
-    <button type="submit" class="btn btn-primary">Submit</button>
+    <button id="checkCreds" class="btn btn-primary">Submit</button>
   </form>
 </div>
 
-<script
-  src="https://code.jquery.com/jquery-3.3.1.min.js"
-  integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8="
-  crossorigin="anonymous"></script>
-
-<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js"></script>
-
 <script>
-  $('#myForm').submit(function(event) {
-    event.preventDefault();
+window.addEventListener('load', () => {
+  function ariscuLogin () {
+    const xhr = new XMLHttpRequest()
 
-    $.ajax({
-			type: 'POST',
-			dataType: 'json',
-			cache: false,
-			data: {
-        'email': document.getElementById('email').value,
-        'password': document.getElementById('password').value,
-        'signin': true
-      },
-			url: 'https://www.digilex.co.za/auth/login',
-			success: function (response) {
-        if (!isObject(response)) {
-          alert('Something went wrong. Response invalid');
-          return;
-        }
+    const formData = new FormData(form)
 
-        if (response.success) {
-          window.location = 'https://www.digilex.co.za/dashboard';
-          return;
-        }
+    // Define what happens on successful data submission
+    xhr.addEventListener("load", (event) => {
+      console.log(event)
+      loginSuccess()
+    });
 
-        alert('Login Unsuccessful. Please ensure your username/email and password is correct and your email address has been verified!');
-      },
-      error: function (response) {
-        alert('Request failed');
-      }});
-  });
+    // Define what happens in case of error
+    xhr.addEventListener("error", loginError);
 
-  function isObject(response) {
-    if ((typeof response === "object") && (response !== null)) {
-        return true;
-    }
+    // Set up our request
+    xhr.open(form.method, form.action)
 
-    return false;
+    // The data sent is what the user provided in the form
+    xhr.send(formData)
   }
+
+  function loginError () {
+    alert('Username/email and password is incorrect!')
+  }
+
+  function loginSuccess () {
+    window.location.assign('https://www.digilex.co.za/')
+  }
+
+  const form = document.getElementById('myForm')
+
+  form.addEventListener('submit', (event) => {
+    event.preventDefault()
+
+    ariscuLogin()
+  })
+})
 </script>

@@ -1,6 +1,6 @@
 # Introduction
 
-This repo is for public collab on some of my work related projects
+This repo is for collab on some of my work related projects
 
 <details>
   

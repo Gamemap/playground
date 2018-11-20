@@ -25,47 +25,46 @@
   </form>
 </div>
 
+<script
+  src="https://code.jquery.com/jquery-3.3.1.min.js"
+  integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8="
+  crossorigin="anonymous"></script>
+
 <script>
-window.addEventListener('load', () => {
-  function ariscuLogin () {
-    const xhr = new XMLHttpRequest()
+  $('#myForm').submit(function(event) {
+    event.preventDefault();
+    $.ajax({
+      type: 'POST',
+      dataType: 'json',
+      cache: false,
+      data: {
+        'email': document.getElementById('email').value,
+        'password': document.getElementById('password').value,
+        'signin': true
+      },
+      url: 'http://dev.digilex.co.za/auth/login',
+      success: function (response) {
 
-    const formData = new FormData(form)
+        if (!isObject(response)) {
+          alert('Something went wrong. Response invalid');
+          return;
+        }
 
-    // Define what happens on successful data submission
-    xhr.addEventListener("load", (event) => {
-      const response = JSON.parse(event.target.responseText)
-      if (response.success === true) {
-        loginSuccess()
-      } else {
-        loginError()
+        if (response.success) {
+          window.location = "http://dev.digilex.co.za/auth/redirect"
+          return;
+        }
+
+        alert('Username/email and password is incorrect!');
       }
-    })
+    });
+  });
 
-    // Define what happens in case of error
-    xhr.addEventListener("error", loginError);
+  function isObject(response) {
+    if ((typeof response === "object") && (response !== null)) {
+        return true;
+    }
 
-    // Set up our request
-    xhr.open(form.method, form.action)
-
-    // The data sent is what the user provided in the form
-    xhr.send(formData)
+    return false;
   }
-
-  function loginError () {
-    alert('Username/email and password is incorrect!')
-  }
-
-  function loginSuccess () {
-    window.location.assign('https://www.digilex.co.za/auth/redirect')
-  }
-
-  const form = document.getElementById('myForm')
-
-  form.addEventListener('submit', (event) => {
-    event.preventDefault()
-
-    ariscuLogin()
-  })
-})
 </script>

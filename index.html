@@ -2,14 +2,14 @@
 
 <div class="container">
   <h1>Log into Ariscu</h1>
-  <form id="myForm" action="https://api.digilex.co.za/oauth/token" method="POST">
+  <form id="myForm" action="http://dev.digilex.co.za/auth/tokenlogin">
     <div class="form-group">
-      <label for="email">Email address</label>
+      <label for="username">Email address</label>
       <input type="email"
              class="form-control"
-             id="email"
+             id="username"
              placeholder="Enter email"
-             name="email">
+             name="username">
     </div>
     <div class="form-group">
       <label for="password">Password</label>
@@ -21,52 +21,46 @@
     </div>
     <button id="checkCreds" class="btn btn-primary">Submit</button>
   </form>
+  <form id="tokenForm" action="http://dev.digilex.co.za/auth/tokenlogin" method="POST">
+    <input type="hidden" id="token" name="token" />
+  </form>
 </div>
 
+<script
+  src="https://code.jquery.com/jquery-3.3.1.min.js"
+  integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8="
+  crossorigin="anonymous"></script>
+
 <script>
-window.addEventListener('load', () => {
-  function ariscuLogin () {
-    const xhr = new XMLHttpRequest()
+  $('#myForm').submit(function(event) {
+    event.preventDefault();
 
-    const formData = new FormData(form)
+    var form = new FormData();
 
-    // Define what happens on successful data submission
-    xhr.addEventListener("load", (event) => {
-      const response = JSON.parse(event.target.responseText)
+    form.append("grant_type", "password");
+    form.append("username", document.getElementById('username').value);
+    form.append("password", document.getElementById('password').value);
 
-      debugger;
+    var settings = {
+      "url": "http://api.dev.digilex.co.za/oauth/token",
+      "method": "POST",
+      "headers": {
+        "cache-control": "no-cache"
+      },
+      "processData": false,
+      "contentType": false,
+      "mimeType": "multipart/form-data",
+      "data": form
+    }
 
-      // if (response.success === true) {
-      //   loginSuccess()
-      // } else {
-      //   loginError()
-      // }
-    })
+    $.ajax(settings).done(function (response) {
 
-    // Define what happens in case of error
-    xhr.addEventListener("error", loginError);
+      var oauth = JSON.parse(response);
 
-    // Set up our request
-    xhr.open(form.method, form.action)
+      document.getElementById("token").value = oauth.access_token;
 
-    // The data sent is what the user provided in the form
-    xhr.send(formData)
-  }
+      $('#tokenForm').submit();
+    });
 
-  function loginError () {
-    alert('Username/email and password is incorrect!')
-  }
-
-  function loginSuccess () {
-    window.location.assign('https://www.digilex.co.za/auth/redirect')
-  }
-
-  const form = document.getElementById('myForm')
-
-  form.addEventListener('submit', (event) => {
-    event.preventDefault()
-
-    ariscuLogin()
-  })
-})
+  });
 </script>

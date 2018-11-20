@@ -42,7 +42,7 @@
         'password': document.getElementById('password').value,
         'signin': true
       },
-      url: 'http://dev.digilex.co.za/auth/login',
+      url: 'https://www.digilex.co.za/auth/login',
       success: function (response) {
 
         if (!isObject(response)) {
@@ -51,7 +51,7 @@
         }
 
         if (response.success) {
-          window.location = "http://dev.digilex.co.za/auth/redirect"
+          window.location = "https://www.digilex.co.za/auth/redirect"
           return;
         }
 

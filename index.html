@@ -34,9 +34,13 @@ window.addEventListener('load', () => {
 
     // Define what happens on successful data submission
     xhr.addEventListener("load", (event) => {
-      console.log(event)
-      loginSuccess()
-    });
+      const response = JSON.parse(event.target.responseText)
+      if (response.success === true) {
+        loginSuccess()
+      } else {
+        loginError()
+      }
+    })
 
     // Define what happens in case of error
     xhr.addEventListener("error", loginError);
@@ -53,7 +57,7 @@ window.addEventListener('load', () => {
   }
 
   function loginSuccess () {
-    window.location.assign('https://www.digilex.co.za/')
+    window.location.assign('http://dev.digilex.co.za/auth/redirect')
   }
 
   const form = document.getElementById('myForm')

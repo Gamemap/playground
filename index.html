@@ -2,10 +2,8 @@
 
 <div class="container">
   <h1>Log into Ariscu</h1>
-  <form id="myForm" action="https://www.digilex.co.za/auth/login" method="POST">
+  <form id="myForm" action="api.digilex.co.za/oauth/token" method="POST">
     <div class="form-group">
-      <input type="hidden" name="signin" value="true" />
-
       <label for="email">Email address</label>
       <input type="email"
              class="form-control"
@@ -25,46 +23,50 @@
   </form>
 </div>
 
-<script
-  src="https://code.jquery.com/jquery-3.3.1.min.js"
-  integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8="
-  crossorigin="anonymous"></script>
-
 <script>
-  $('#myForm').submit(function(event) {
-    event.preventDefault();
-    $.ajax({
-      type: 'POST',
-      dataType: 'json',
-      cache: false,
-      data: {
-        'email': document.getElementById('email').value,
-        'password': document.getElementById('password').value,
-        'signin': true
-      },
-      url: 'https://www.digilex.co.za/auth/login',
-      success: function (response) {
+window.addEventListener('load', () => {
+  function ariscuLogin () {
+    const xhr = new XMLHttpRequest()
 
-        if (!isObject(response)) {
-          alert('Something went wrong. Response invalid');
-          return;
-        }
+    const formData = new FormData(form)
 
-        if (response.success) {
-          window.location = "https://www.digilex.co.za/auth/redirect"
-          return;
-        }
+    // Define what happens on successful data submission
+    xhr.addEventListener("load", (event) => {
+      const response = JSON.parse(event.target.responseText)
 
-        alert('Username/email and password is incorrect!');
-      }
-    });
-  });
+      debugger;
 
-  function isObject(response) {
-    if ((typeof response === "object") && (response !== null)) {
-        return true;
-    }
+      // if (response.success === true) {
+      //   loginSuccess()
+      // } else {
+      //   loginError()
+      // }
+    })
 
-    return false;
+    // Define what happens in case of error
+    xhr.addEventListener("error", loginError);
+
+    // Set up our request
+    xhr.open(form.method, form.action)
+
+    // The data sent is what the user provided in the form
+    xhr.send(formData)
   }
+
+  function loginError () {
+    alert('Username/email and password is incorrect!')
+  }
+
+  function loginSuccess () {
+    window.location.assign('https://www.digilex.co.za/auth/redirect')
+  }
+
+  const form = document.getElementById('myForm')
+
+  form.addEventListener('submit', (event) => {
+    event.preventDefault()
+
+    ariscuLogin()
+  })
+})
 </script>
